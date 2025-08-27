@@ -92,7 +92,7 @@ class PasswordResetAPI {
                 return [
                     'success' => true,
                     'message' => 'Password reset requested successfully',
-                    'demo_reset_link' => "http://localhost/cyberquiz-3d/reset-password.html?token=$token"
+                    'demo_reset_link' => "http://localhost/reset-password.html?token=$token"
                 ];
             }
             
@@ -222,22 +222,91 @@ class PasswordResetAPI {
     }
     
     private function sendResetEmail($user, $token) {
-        // Implement email sending logic here
-        // This is a placeholder for actual email service integration
+        // In demo mode, we don't actually send emails
+        if (ENABLE_DEMO_MODE) {
+            logError('Email sending skipped - Demo mode enabled', [
+                'email' => $user['email'],
+                'token' => substr($token, 0, 8) . '...'
+            ]);
+            return true;
+        }
         
-        $resetLink = "https://yourdomain.com/reset-password.html?token=$token";
+        // Use correct local development URL
+        $resetLink = "http://localhost/reset-password.html?token=$token";
         $subject = "Password Reset - CyberQuiz 3D";
+        
+        // HTML email message
         $message = "
-        <h2>Password Reset Request</h2>
-        <p>Hello {$user['name']},</p>
-        <p>You requested a password reset for your CyberQuiz 3D account.</p>
-        <p><a href='$resetLink'>Click here to reset your password</a></p>
-        <p>This link will expire in 1 hour.</p>
-        <p>If you didn't request this reset, please ignore this email.</p>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+                .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
+                .header { text-align: center; color: #00ffff; margin-bottom: 30px; }
+                .content { color: #333; line-height: 1.6; }
+                .button { display: inline-block; padding: 12px 24px; background: linear-gradient(45deg, #00ffff, #ff00ff); color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+                .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 12px; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🚀 CyberQuiz 3D - Password Reset</h2>
+                </div>
+                <div class='content'>
+                    <p>Hello <strong>{$user['name']}</strong>,</p>
+                    <p>You requested a password reset for your CyberQuiz 3D account.</p>
+                    <p>Click the button below to reset your password:</p>
+                    <p><a href='$resetLink' class='button'>Reset Password</a></p>
+                    <p>Or copy and paste this link in your browser:<br>
+                    <code>$resetLink</code></p>
+                    <p><strong>⚠️ This link will expire in 1 hour for security.</strong></p>
+                    <p>If you didn't request this reset, please ignore this email and your password will remain unchanged.</p>
+                </div>
+                <div class='footer'>
+                    <p>This is an automated message from CyberQuiz 3D System.<br>
+                    Do not reply to this email.</p>
+                </div>
+            </div>
+        </body>
+        </html>
         ";
         
-        // Use your preferred email service (PHPMailer, SendGrid, etc.)
-        // mail($user['email'], $subject, $message);
+        // Set headers for HTML email
+        $headers = [
+            'MIME-Version: 1.0',
+            'Content-type: text/html; charset=UTF-8',
+            'From: ' . MAIL_FROM_NAME . ' <' . MAIL_FROM_ADDRESS . '>',
+            'Reply-To: ' . MAIL_FROM_ADDRESS,
+            'X-Mailer: PHP/' . phpversion()
+        ];
+        
+        try {
+            // Use PHP's built-in mail function (for development)
+            // In production, use PHPMailer or a service like SendGrid
+            $sent = mail($user['email'], $subject, $message, implode("\r\n", $headers));
+            
+            if ($sent) {
+                logError('Password reset email sent successfully', [
+                    'email' => $user['email'],
+                    'token' => substr($token, 0, 8) . '...'
+                ]);
+                return true;
+            } else {
+                logError('Failed to send password reset email', [
+                    'email' => $user['email'],
+                    'error' => 'mail() function returned false'
+                ]);
+                return false;
+            }
+        } catch (Exception $e) {
+            logError('Email sending exception', [
+                'email' => $user['email'],
+                'error' => $e->getMessage()
+            ]);
+            return false;
+        }
     }
 }
 
