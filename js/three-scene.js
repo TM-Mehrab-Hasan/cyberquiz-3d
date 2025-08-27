@@ -74,7 +74,7 @@ class ThreeScene {
     }
     
     createRenderer() {
-        const canvas = document.getElementById('threejs-canvas');
+        const canvas = document.getElementById('three-canvas');
         this.renderer = new THREE.WebGLRenderer({ 
             canvas: canvas,
             antialias: true,
@@ -368,14 +368,18 @@ class ThreeScene {
     }
     
     setupControls() {
-        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-        this.controls.enableDamping = true;
-        this.controls.dampingFactor = 0.05;
-        this.controls.maxDistance = 100;
-        this.controls.minDistance = 5;
-        this.controls.maxPolarAngle = Math.PI / 2;
-        this.controls.autoRotate = true;
-        this.controls.autoRotateSpeed = 0.5;
+        if (typeof THREE.OrbitControls !== 'undefined') {
+            this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+            this.controls.enableDamping = true;
+            this.controls.dampingFactor = 0.05;
+            this.controls.maxDistance = 100;
+            this.controls.minDistance = 5;
+            this.controls.maxPolarAngle = Math.PI / 2;
+            this.controls.autoRotate = true;
+            this.controls.autoRotateSpeed = 0.5;
+        } else {
+            console.warn('OrbitControls not available, using basic camera controls');
+        }
     }
     
     setupEventListeners() {

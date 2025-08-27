@@ -16,47 +16,68 @@ class LandingPageManager {
     }
     
     init() {
+        console.log('Initializing Landing Page Manager...');
         this.setupThreeJS();
         this.setupEventListeners();
         this.animateParticles();
         this.showWelcomeAnimation();
+        console.log('Landing Page Manager initialized successfully');
     }
     
     setupThreeJS() {
-        // Scene setup
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.renderer = new THREE.WebGLRenderer({ 
-            canvas: document.getElementById('three-canvas'),
-            alpha: true,
-            antialias: true 
-        });
-        
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setClearColor(0x000000, 0);
-        
-        // Create particles
-        this.createParticles();
-        
-        // Create floating geometric shapes
-        this.createFloatingShapes();
-        
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
-        this.scene.add(ambientLight);
-        
-        const pointLight = new THREE.PointLight(0x00ff88, 1, 100);
-        pointLight.position.set(10, 10, 10);
-        this.scene.add(pointLight);
-        
-        // Camera position
-        this.camera.position.z = 30;
-        
-        // Start render loop
-        this.animate();
-        
-        // Handle window resize
-        window.addEventListener('resize', () => this.onWindowResize());
+        try {
+            // Check if Three.js is loaded
+            if (typeof THREE === 'undefined') {
+                console.error('Three.js is not loaded');
+                return;
+            }
+            
+            // Check if canvas exists
+            const canvas = document.getElementById('three-canvas');
+            if (!canvas) {
+                console.error('Canvas element not found');
+                return;
+            }
+            
+            // Scene setup
+            this.scene = new THREE.Scene();
+            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            this.renderer = new THREE.WebGLRenderer({ 
+                canvas: canvas,
+                alpha: true,
+                antialias: true 
+            });
+            
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setClearColor(0x000000, 0);
+            
+            // Create particles
+            this.createParticles();
+            
+            // Create floating geometric shapes
+            this.createFloatingShapes();
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+            this.scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00ff88, 1, 100);
+            pointLight.position.set(10, 10, 10);
+            this.scene.add(pointLight);
+            
+            // Camera position
+            this.camera.position.z = 30;
+            
+            // Start render loop
+            this.animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => this.onWindowResize());
+            
+            console.log('Three.js setup completed successfully');
+        } catch (error) {
+            console.error('Error setting up Three.js:', error);
+        }
     }
     
     createParticles() {
@@ -182,24 +203,37 @@ class LandingPageManager {
     
     setupEventListeners() {
         // Modal controls
-        document.getElementById('login-btn').addEventListener('click', () => this.showLoginModal());
-        document.getElementById('signup-btn').addEventListener('click', () => this.showSignupModal());
-        document.getElementById('get-started-btn').addEventListener('click', () => this.showSignupModal());
-        document.getElementById('demo-btn').addEventListener('click', () => this.showDemoModal());
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const demoBtn = document.getElementById('demo-btn');
+        
+        if (loginBtn) loginBtn.addEventListener('click', () => this.showLoginModal());
+        if (signupBtn) signupBtn.addEventListener('click', () => this.showSignupModal());
+        if (getStartedBtn) getStartedBtn.addEventListener('click', () => this.showSignupModal());
+        if (demoBtn) demoBtn.addEventListener('click', () => this.showDemoModal());
         
         // Close modals
-        document.getElementById('close-login').addEventListener('click', () => this.hideLoginModal());
-        document.getElementById('close-signup').addEventListener('click', () => this.hideSignupModal());
+        const closeLogin = document.getElementById('close-login');
+        const closeSignup = document.getElementById('close-signup');
+        if (closeLogin) closeLogin.addEventListener('click', () => this.hideLoginModal());
+        if (closeSignup) closeSignup.addEventListener('click', () => this.hideSignupModal());
         
         // Switch between modals
-        document.getElementById('switch-to-signup').addEventListener('click', () => {
-            this.hideLoginModal();
-            this.showSignupModal();
-        });
-        document.getElementById('switch-to-login').addEventListener('click', () => {
-            this.hideSignupModal();
-            this.showLoginModal();
-        });
+        const switchToSignup = document.getElementById('switch-to-signup');
+        const switchToLogin = document.getElementById('switch-to-login');
+        if (switchToSignup) {
+            switchToSignup.addEventListener('click', () => {
+                this.hideLoginModal();
+                this.showSignupModal();
+            });
+        }
+        if (switchToLogin) {
+            switchToLogin.addEventListener('click', () => {
+                this.hideSignupModal();
+                this.showLoginModal();
+            });
+        }
         
         // Role selection
         document.querySelectorAll('.role-card').forEach(card => {
@@ -207,8 +241,10 @@ class LandingPageManager {
         });
         
         // Forms
-        document.getElementById('login-form').addEventListener('submit', (e) => this.handleLogin(e));
-        document.getElementById('signup-form').addEventListener('submit', (e) => this.handleSignup(e));
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        if (loginForm) loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+        if (signupForm) signupForm.addEventListener('submit', (e) => this.handleSignup(e));
         
         // Close modals when clicking outside
         document.addEventListener('click', (e) => {
@@ -216,26 +252,41 @@ class LandingPageManager {
                 this.hideAllModals();
             }
         });
+        
+        console.log('Event listeners setup completed');
     }
     
     showWelcomeAnimation() {
-        // Animate the hero text
-        gsap.fromTo('.floating', 
-            { opacity: 0, y: 50 }, 
-            { opacity: 1, y: 0, duration: 2, ease: 'power3.out' }
-        );
-        
-        // Animate feature cards
-        gsap.fromTo('.cyber-card', 
-            { opacity: 0, scale: 0.8 }, 
-            { opacity: 1, scale: 1, duration: 1, stagger: 0.2, delay: 0.5 }
-        );
-        
-        // Animate navigation
-        gsap.fromTo('nav', 
-            { opacity: 0, y: -50 }, 
-            { opacity: 1, y: 0, duration: 1, delay: 0.3 }
-        );
+        try {
+            if (typeof gsap !== 'undefined') {
+                // Animate the hero text
+                gsap.fromTo('.floating', 
+                    { opacity: 0, y: 50 }, 
+                    { opacity: 1, y: 0, duration: 2, ease: 'power3.out' }
+                );
+                
+                // Animate feature cards
+                gsap.fromTo('.cyber-card', 
+                    { opacity: 0, scale: 0.8 }, 
+                    { opacity: 1, scale: 1, duration: 1, stagger: 0.2, delay: 0.5 }
+                );
+                
+                // Animate navigation
+                gsap.fromTo('nav', 
+                    { opacity: 0, y: -50 }, 
+                    { opacity: 1, y: 0, duration: 1, delay: 0.3 }
+                );
+            } else {
+                console.warn('GSAP not loaded, using CSS animations instead');
+                // Fallback to CSS animations
+                document.querySelectorAll('.floating, .cyber-card, nav').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                });
+            }
+        } catch (error) {
+            console.error('Error in welcome animation:', error);
+        }
     }
     
     showLoginModal() {
