@@ -30,6 +30,12 @@ try {
             $response = $auth->handleRequest();
             break;
             
+        case 'password-reset':
+            require_once 'password-reset.php';
+            // Response is handled directly in password-reset.php
+            exit;
+            break;
+            
         case 'quiz':
             // Quiz management endpoints
             $response = ['success' => false, 'message' => 'Quiz API not yet implemented'];
@@ -64,6 +70,7 @@ try {
                 'message' => 'Unknown API endpoint',
                 'available_endpoints' => [
                     '/api/auth' => 'Authentication endpoints',
+                    '/api/password-reset' => 'Password reset functionality',
                     '/api/quiz' => 'Quiz management',
                     '/api/analytics' => 'Analytics and reporting',
                     '/api/upload' => 'File upload',

@@ -370,11 +370,11 @@ CREATE TABLE `rate_limits` (
 
 -- Insert demo data
 INSERT INTO `users` (`name`, `email`, `password`, `role`, `vr_enabled`, `eye_tracking_calibrated`) VALUES
-('System Administrator', 'admin@3dquiz.com', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VjWZif2rG', 'admin', 1, 1),
-('Dr. Sarah Johnson', 'teacher@3dquiz.com', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VjWZif2rG', 'teacher', 1, 1),
-('Alex Rodriguez', 'student@3dquiz.com', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VjWZif2rG', 'student', 0, 0),
-('Michael Chen', 'student2@3dquiz.com', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VjWZif2rG', 'student', 1, 1),
-('Prof. Emily Davis', 'teacher2@3dquiz.com', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/VjWZif2rG', 'teacher', 1, 1);
+('System Administrator', 'admin@cyberquiz.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 1, 1),
+('Dr. Sarah Johnson', 'teacher@cyberquiz.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'teacher', 1, 1),
+('Alex Rodriguez', 'student@cyberquiz.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'student', 0, 0),
+('Michael Chen', 'student2@cyberquiz.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'student', 1, 1),
+('Prof. Emily Davis', 'teacher2@cyberquiz.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'teacher', 1, 1);
 
 INSERT INTO `3d_environments` (`name`, `theme`, `lighting_config`, `camera_settings`, `created_by`) VALUES
 ('Cyber Classroom', 'cyberpunk', '{"ambient": {"color": "#2080ff", "intensity": 0.3}, "directional": {"color": "#ffffff", "intensity": 0.8}}', '{"position": {"x": 0, "y": 5, "z": 15}, "fov": 75}', 1),
@@ -484,7 +484,7 @@ INSERT INTO `eye_tracking_data` (`submission_id`, `timestamp`, `gaze_x`, `gaze_y
 (2, UNIX_TIMESTAMP(NOW()) * 1000, 640.0, 360.0, 98.1, 95.5),
 (2, UNIX_TIMESTAMP(NOW()) * 1000 + 100, 635.5, 365.2, 97.8, 94.2);
 
--- All demo passwords are 'demo123' (hashed with PASSWORD_DEFAULT)
--- Default admin credentials: admin@3dquiz.com / demo123
--- Default teacher credentials: teacher@3dquiz.com / demo123  
--- Default student credentials: student@3dquiz.com / demo123
+-- All demo passwords are 'admin123' for admin, 'teacher123' for teachers, 'student123' for students
+-- Default admin credentials: admin@cyberquiz.com / admin123
+-- Default teacher credentials: teacher@cyberquiz.com / teacher123  
+-- Default student credentials: student@cyberquiz.com / student123

@@ -8,7 +8,7 @@ class Database {
     private $host = 'localhost';
     private $username = 'root';
     private $password = '';
-    private $database = 'quiz_3d_system';
+    private $database = '3d_quiz_system';
     private $connection;
     private $logFile = '../logs/database.log';
     
