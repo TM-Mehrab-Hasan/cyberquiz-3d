@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - 3D Anti-Cheat Quiz System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 15px #00ff88;
+        }
+        
+        .cyber-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-card:hover {
+            border-color: #ff0080;
+            box-shadow: 0 0 30px rgba(255, 0, 128, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            border: none;
+            color: #000;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-btn:hover {
+            background: linear-gradient(45deg, #ff0080, #8000ff);
+            color: #fff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-black bg-opacity-80 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                        <span class="font-bold text-lg">3D</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold neon-text">Student Dashboard</h1>
+                        <p class="text-xs text-gray-400">Welcome back, <span id="student-name">Student</span></p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-sm font-medium" id="user-name">Alex Rodriguez</p>
+                        <p class="text-xs text-gray-400">Student</p>
+                    </div>
+                    <button id="logout-btn" class="cyber-btn px-4 py-2 rounded-lg">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Welcome Section -->
+        <section class="mb-8">
+            <div class="cyber-card p-8 rounded-lg text-center">
+                <h2 class="text-3xl font-bold mb-4 neon-text">Welcome to Your Learning Space! 🎓</h2>
+                <p class="text-gray-300 mb-6">Ready to take some quizzes? Select from available assessments below.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-blue-600 bg-opacity-20 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold">Quizzes Completed</h3>
+                        <p class="text-2xl font-bold text-blue-400">12</p>
+                    </div>
+                    <div class="bg-green-600 bg-opacity-20 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold">Average Score</h3>
+                        <p class="text-2xl font-bold text-green-400">87%</p>
+                    </div>
+                    <div class="bg-purple-600 bg-opacity-20 p-4 rounded-lg">
+                        <h3 class="text-lg font-bold">VR Sessions</h3>
+                        <p class="text-2xl font-bold text-purple-400">5</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Available Quizzes -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-6 neon-text">Available Quizzes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Quiz 1 -->
+                <div class="cyber-card p-6 rounded-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-blue-600 rounded-full text-xs">Computer Graphics</span>
+                        <span class="text-green-400 text-sm">🟢 Available</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">3D Modeling Fundamentals</h3>
+                    <p class="text-gray-400 text-sm mb-4">Test your understanding of basic 3D modeling concepts in an immersive environment</p>
+                    <div class="space-y-2 text-sm mb-4">
+                        <div class="flex justify-between">
+                            <span>Duration:</span>
+                            <span class="text-blue-400">45 minutes</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Questions:</span>
+                            <span class="text-blue-400">15</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>VR Mode:</span>
+                            <span class="text-yellow-400">Optional</span>
+                        </div>
+                    </div>
+                    <button class="cyber-btn w-full py-2 rounded-lg" onclick="startQuiz(1)">
+                        Start Quiz
+                    </button>
+                </div>
+                
+                <!-- Quiz 2 -->
+                <div class="cyber-card p-6 rounded-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-purple-600 rounded-full text-xs">Spatial Computing</span>
+                        <span class="text-green-400 text-sm">🟢 Available</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Spatial Interface Design</h3>
+                    <p class="text-gray-400 text-sm mb-4">Design principles for 3D user interfaces in virtual environments</p>
+                    <div class="space-y-2 text-sm mb-4">
+                        <div class="flex justify-between">
+                            <span>Duration:</span>
+                            <span class="text-blue-400">50 minutes</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Questions:</span>
+                            <span class="text-blue-400">20</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>VR Mode:</span>
+                            <span class="text-red-400">Required</span>
+                        </div>
+                    </div>
+                    <button class="cyber-btn w-full py-2 rounded-lg" onclick="startQuiz(2)">
+                        Start VR Quiz
+                    </button>
+                </div>
+                
+                <!-- Quiz 3 -->
+                <div class="cyber-card p-6 rounded-lg opacity-50">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-gray-600 rounded-full text-xs">Innovation Lab</span>
+                        <span class="text-red-400 text-sm">🔴 Locked</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Emerging Tech Assessment</h3>
+                    <p class="text-gray-400 text-sm mb-4">Complete previous quizzes to unlock this advanced assessment</p>
+                    <div class="space-y-2 text-sm mb-4">
+                        <div class="flex justify-between">
+                            <span>Duration:</span>
+                            <span class="text-gray-400">90 minutes</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Questions:</span>
+                            <span class="text-gray-400">30</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Prerequisites:</span>
+                            <span class="text-gray-400">2/2 completed</span>
+                        </div>
+                    </div>
+                    <button class="bg-gray-600 w-full py-2 rounded-lg cursor-not-allowed" disabled>
+                        Locked
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Recent Results -->
+        <section>
+            <h2 class="text-2xl font-bold mb-6 neon-text">Recent Results</h2>
+            <div class="cyber-card rounded-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-900">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Quiz</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Score</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Mode</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800">
+                            <tr class="hover:bg-gray-800 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">3D Modeling Fundamentals</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-400 font-bold">85%</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">2 hours ago</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-400">Standard</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Completed
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-800 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">Spatial Interface Design</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-400 font-bold">92%</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">1 day ago</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-purple-400">VR Mode</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Completed
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md hidden items-center justify-center z-50">
+        <div class="cyber-card max-w-md w-full mx-4 p-8 rounded-lg">
+            <h2 class="text-2xl font-bold neon-text mb-6">Ready to Start Quiz?</h2>
+            <div id="quiz-info" class="space-y-4 mb-6">
+                <!-- Quiz info will be populated by JavaScript -->
+            </div>
+            <div class="flex space-x-4">
+                <button id="cancel-quiz" class="flex-1 border border-gray-600 py-3 rounded-lg hover:border-red-400 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirm-quiz" class="flex-1 cyber-btn py-3 rounded-lg">
+                    Begin Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.id || user.role !== 'student') {
+                window.location.href = 'landing.html';
+                return;
+            }
+            
+            // Update user info
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('student-name').textContent = user.name.split(' ')[0];
+            
+            // Animate cards on load
+            gsap.fromTo('.cyber-card', 
+                { opacity: 0, y: 20 }, 
+                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }
+            );
+        });
+        
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'landing.html';
+            }
+        });
+        
+        // Quiz functions
+        function startQuiz(quizId) {
+            const quizData = {
+                1: {
+                    title: '3D Modeling Fundamentals',
+                    duration: '45 minutes',
+                    questions: 15,
+                    vrRequired: false
+                },
+                2: {
+                    title: 'Spatial Interface Design',
+                    duration: '50 minutes',
+                    questions: 20,
+                    vrRequired: true
+                }
+            };
+            
+            const quiz = quizData[quizId];
+            if (!quiz) return;
+            
+            document.getElementById('quiz-info').innerHTML = `
+                <div class="space-y-2">
+                    <h3 class="text-lg font-bold">${quiz.title}</h3>
+                    <p class="text-gray-400">Duration: ${quiz.duration}</p>
+                    <p class="text-gray-400">Questions: ${quiz.questions}</p>
+                    ${quiz.vrRequired ? 
+                        '<p class="text-red-400">⚠️ VR headset required for this quiz</p>' : 
+                        '<p class="text-blue-400">💻 Can be taken in standard mode</p>'
+                    }
+                </div>
+            `;
+            
+            document.getElementById('quiz-modal').classList.remove('hidden');
+            document.getElementById('quiz-modal').classList.add('flex');
+            
+            document.getElementById('confirm-quiz').onclick = () => {
+                // In a real application, this would start the quiz
+                alert('Quiz would start here! Redirecting to quiz interface...');
+                document.getElementById('quiz-modal').classList.add('hidden');
+                document.getElementById('quiz-modal').classList.remove('flex');
+            };
+        }
+        
+        // Cancel quiz
+        document.getElementById('cancel-quiz').addEventListener('click', function() {
+            document.getElementById('quiz-modal').classList.add('hidden');
+            document.getElementById('quiz-modal').classList.remove('flex');
+        });
+        
+        // Close modal when clicking outside
+        document.getElementById('quiz-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+                this.classList.remove('flex');
+            }
+        });
+    </script>
+</body>
+</html>

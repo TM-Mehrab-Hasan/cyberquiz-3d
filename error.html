@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - 3D Anti-Cheat Quiz System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 15px #00ff88;
+        }
+        
+        .cyber-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            border: none;
+            color: #000;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-btn:hover {
+            background: linear-gradient(45deg, #ff0080, #8000ff);
+            color: #fff;
+            transform: scale(1.05);
+        }
+        
+        .glitch {
+            animation: glitch 2s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen flex items-center justify-center">
+    <div class="text-center max-w-md mx-auto p-6">
+        <div class="cyber-card p-8 rounded-lg">
+            <div class="text-8xl mb-6 glitch">⚠️</div>
+            <h1 class="text-4xl font-bold mb-4 neon-text">SYSTEM ERROR</h1>
+            <p class="text-gray-300 mb-6">
+                An error occurred while accessing the 3D Quiz System.
+                Please check your connection and try again.
+            </p>
+            
+            <div class="space-y-4 mb-8">
+                <div class="text-sm text-gray-400">
+                    <strong>Error Codes:</strong>
+                    <div class="mt-2">
+                        404 - Page Not Found<br>
+                        403 - Access Forbidden<br>
+                        500 - Server Error
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <button onclick="window.history.back()" class="cyber-btn w-full py-3 rounded-lg">
+                    ← Go Back
+                </button>
+                <button onclick="window.location.href='landing.html'" class="cyber-btn w-full py-3 rounded-lg">
+                    🏠 Home Page
+                </button>
+                <button onclick="window.location.reload()" class="cyber-btn w-full py-3 rounded-lg">
+                    🔄 Refresh Page
+                </button>
+            </div>
+            
+            <div class="mt-8 text-xs text-gray-500">
+                If this problem persists, please contact system administrator.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

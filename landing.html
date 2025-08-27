@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Anti-Cheat Quiz System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/three@0.156.1/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.156.1/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            overflow-x: hidden;
+        }
+        
+        .cyber-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 15px #00ff88;
+        }
+        
+        .cyber-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-card:hover {
+            border-color: #ff0080;
+            box-shadow: 0 0 30px rgba(255, 0, 128, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            border: none;
+            color: #000;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cyber-btn:hover {
+            background: linear-gradient(45deg, #ff0080, #8000ff);
+            color: #fff;
+            transform: scale(1.05);
+        }
+        
+        .cyber-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cyber-btn:hover::before {
+            left: 100%;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); }
+            to { box-shadow: 0 0 40px rgba(0, 255, 136, 0.8); }
+        }
+        
+        .modal {
+            backdrop-filter: blur(10px);
+        }
+        
+        .role-card {
+            background: rgba(0, 20, 40, 0.9);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .role-card:hover {
+            border-color: #00ff88;
+            background: rgba(0, 40, 80, 0.9);
+        }
+        
+        .role-card.selected {
+            border-color: #ff0080;
+            background: rgba(40, 0, 80, 0.9);
+        }
+        
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <!-- Three.js Background -->
+    <canvas id="three-canvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-black bg-opacity-50 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center glow">
+                        <span class="font-bold text-lg">3D</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold neon-text">Anti-Cheat Quiz</h1>
+                        <p class="text-xs text-gray-400">Next-Gen Education</p>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button id="login-btn" class="cyber-btn px-6 py-2 rounded-lg">
+                        Login
+                    </button>
+                    <button id="signup-btn" class="cyber-btn px-6 py-2 rounded-lg">
+                        Sign Up
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center relative pt-20">
+        <div class="container mx-auto px-6 text-center">
+            <div class="floating">
+                <h1 class="text-6xl md:text-8xl font-bold mb-6 neon-text">
+                    FUTURE OF
+                    <span class="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        EDUCATION
+                    </span>
+                </h1>
+            </div>
+            
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto">
+                Experience immersive 3D quizzes with advanced anti-cheat technology, 
+                VR support, and AI-powered monitoring for academic integrity.
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-6 justify-center items-center mb-12">
+                <button id="get-started-btn" class="cyber-btn px-8 py-4 rounded-lg text-lg">
+                    🚀 Start Your Journey
+                </button>
+                <button id="demo-btn" class="border border-gray-600 px-8 py-4 rounded-lg text-lg hover:border-blue-400 transition-colors">
+                    📹 Watch Demo
+                </button>
+            </div>
+            
+            <!-- Feature Highlights -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                <div class="cyber-card p-6 rounded-lg floating">
+                    <div class="text-4xl mb-4">🥽</div>
+                    <h3 class="text-xl font-bold mb-2">VR/AR Ready</h3>
+                    <p class="text-gray-400">Immersive virtual reality quiz experiences</p>
+                </div>
+                
+                <div class="cyber-card p-6 rounded-lg floating" style="animation-delay: 0.2s;">
+                    <div class="text-4xl mb-4">🛡️</div>
+                    <h3 class="text-xl font-bold mb-2">Anti-Cheat AI</h3>
+                    <p class="text-gray-400">Advanced monitoring with eye tracking</p>
+                </div>
+                
+                <div class="cyber-card p-6 rounded-lg floating" style="animation-delay: 0.4s;">
+                    <div class="text-4xl mb-4">📊</div>
+                    <h3 class="text-xl font-bold mb-2">Real-time Analytics</h3>
+                    <p class="text-gray-400">Comprehensive performance insights</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 neon-text">
+                Revolutionary Features
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="cyber-card p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-400">🎯 3D Interactive Environment</h3>
+                        <p class="text-gray-300">Navigate through stunning cyberpunk-themed 3D spaces with interactive objects, spatial audio, and immersive lighting effects.</p>
+                    </div>
+                    
+                    <div class="cyber-card p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4 text-purple-400">👁️ Eye Tracking Technology</h3>
+                        <p class="text-gray-300">Advanced gaze monitoring ensures academic integrity by detecting suspicious eye movements and attention patterns.</p>
+                    </div>
+                    
+                    <div class="cyber-card p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4 text-pink-400">🤖 AI-Powered Proctoring</h3>
+                        <p class="text-gray-300">Machine learning algorithms analyze behavior patterns to identify potential cheating attempts in real-time.</p>
+                    </div>
+                </div>
+                
+                <div class="cyber-card p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-center">System Statistics</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span>Security Detection Rate</span>
+                            <span class="text-green-400 font-bold">99.7%</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="bg-green-400 h-2 rounded-full" style="width: 99.7%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span>VR Compatibility</span>
+                            <span class="text-blue-400 font-bold">95%</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="bg-blue-400 h-2 rounded-full" style="width: 95%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span>User Satisfaction</span>
+                            <span class="text-purple-400 font-bold">98.5%</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="bg-purple-400 h-2 rounded-full" style="width: 98.5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden items-center justify-center z-50">
+        <div class="cyber-card max-w-md w-full mx-4 p-8 rounded-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold neon-text">Login</h2>
+                <button id="close-login" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="login-email" required 
+                           class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="login-password" required 
+                           class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2">
+                        <span class="text-sm">Remember me</span>
+                    </label>
+                    <a href="#" class="text-sm text-blue-400 hover:underline">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="w-full cyber-btn py-3 rounded-lg text-lg">
+                    Login
+                </button>
+                
+                <div class="text-center">
+                    <p class="text-sm text-gray-400">
+                        Don't have an account? 
+                        <button type="button" id="switch-to-signup" class="text-blue-400 hover:underline">Sign up</button>
+                    </p>
+                </div>
+            </form>
+            
+            <!-- Demo Accounts -->
+            <div class="mt-6 p-4 bg-gray-900 rounded-lg">
+                <h3 class="text-sm font-bold mb-3 text-center text-gray-300">Demo Accounts</h3>
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-yellow-400">Admin:</span>
+                        <span>admin@3dquiz.com / demo123</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-green-400">Teacher:</span>
+                        <span>teacher@3dquiz.com / demo123</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-blue-400">Student:</span>
+                        <span>student@3dquiz.com / demo123</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden items-center justify-center z-50">
+        <div class="cyber-card max-w-md w-full mx-4 p-8 rounded-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold neon-text">Sign Up</h2>
+                <button id="close-signup" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            
+            <!-- Role Selection -->
+            <div id="role-selection" class="space-y-4 mb-6">
+                <h3 class="text-lg font-bold text-center mb-4">Choose Your Role</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="role-card p-4 rounded-lg cursor-pointer text-center" data-role="teacher">
+                        <div class="text-3xl mb-2">👨‍🏫</div>
+                        <h4 class="font-bold">Teacher</h4>
+                        <p class="text-xs text-gray-400">Create & manage quizzes</p>
+                    </div>
+                    <div class="role-card p-4 rounded-lg cursor-pointer text-center" data-role="student">
+                        <div class="text-3xl mb-2">🎓</div>
+                        <h4 class="font-bold">Student</h4>
+                        <p class="text-xs text-gray-400">Take quizzes & learn</p>
+                    </div>
+                </div>
+            </div>
+            
+            <form id="signup-form" class="space-y-4">
+                <input type="hidden" id="signup-role" value="">
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2">Full Name</label>
+                    <input type="text" id="signup-name" required 
+                           class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="signup-email" required 
+                           class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="signup-password" required 
+                           class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2">Confirm Password</label>
+                    <input type="password" id="signup-confirm-password" required 
+                           class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                </div>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" id="vr-enabled" class="mr-2">
+                    <label for="vr-enabled" class="text-sm">Enable VR/AR features</label>
+                </div>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" id="terms-agree" required class="mr-2">
+                    <label for="terms-agree" class="text-sm">I agree to the <a href="#" class="text-blue-400">Terms of Service</a></label>
+                </div>
+                
+                <button type="submit" class="w-full cyber-btn py-3 rounded-lg text-lg">
+                    Create Account
+                </button>
+                
+                <div class="text-center">
+                    <p class="text-sm text-gray-400">
+                        Already have an account? 
+                        <button type="button" id="switch-to-login" class="text-blue-400 hover:underline">Login</button>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-black z-50 flex items-center justify-center hidden">
+        <div class="text-center">
+            <div class="cyber-card p-8 rounded-lg">
+                <div class="animate-spin w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full mx-auto mb-4"></div>
+                <h3 class="text-xl font-bold neon-text">Initializing 3D Environment...</h3>
+                <p class="text-gray-400">Please wait while we prepare your experience</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/three-scene.js"></script>
+    <script src="js/landing.js"></script>
+</body>
+</html>

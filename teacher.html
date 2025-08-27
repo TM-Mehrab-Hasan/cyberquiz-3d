@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - 3D Anti-Cheat Quiz System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 15px #00ff88;
+        }
+        
+        .cyber-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-card:hover {
+            border-color: #ff0080;
+            box-shadow: 0 0 30px rgba(255, 0, 128, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .cyber-btn {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            border: none;
+            color: #000;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .cyber-btn:hover {
+            background: linear-gradient(45deg, #ff0080, #8000ff);
+            color: #fff;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-black bg-opacity-80 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+                        <span class="font-bold text-lg">3D</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold neon-text">Teacher Dashboard</h1>
+                        <p class="text-xs text-gray-400">Manage your courses and quizzes</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-sm font-medium" id="user-name">Dr. Sarah Johnson</p>
+                        <p class="text-xs text-gray-400">Teacher</p>
+                    </div>
+                    <button id="logout-btn" class="cyber-btn px-4 py-2 rounded-lg">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Welcome Section -->
+        <section class="mb-8">
+            <div class="cyber-card p-8 rounded-lg">
+                <h2 class="text-3xl font-bold mb-4 neon-text">Welcome, Professor! 👨‍🏫</h2>
+                <p class="text-gray-300 mb-6">Manage your courses, create engaging 3D quizzes, and monitor student progress.</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-blue-600 bg-opacity-20 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-bold">Total Students</h3>
+                        <p class="text-2xl font-bold text-blue-400">156</p>
+                    </div>
+                    <div class="bg-green-600 bg-opacity-20 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-bold">Active Courses</h3>
+                        <p class="text-2xl font-bold text-green-400">4</p>
+                    </div>
+                    <div class="bg-purple-600 bg-opacity-20 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-bold">Quizzes Created</h3>
+                        <p class="text-2xl font-bold text-purple-400">18</p>
+                    </div>
+                    <div class="bg-yellow-600 bg-opacity-20 p-4 rounded-lg text-center">
+                        <h3 class="text-lg font-bold">VR Sessions</h3>
+                        <p class="text-2xl font-bold text-yellow-400">89</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quick Actions -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-6 neon-text">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <button class="cyber-card p-6 rounded-lg hover:scale-105 transition-transform" onclick="createQuiz()">
+                    <div class="text-center">
+                        <div class="text-4xl mb-4">📝</div>
+                        <h3 class="text-lg font-bold mb-2">Create New Quiz</h3>
+                        <p class="text-gray-400 text-sm">Design interactive 3D quizzes with anti-cheat features</p>
+                    </div>
+                </button>
+                
+                <button class="cyber-card p-6 rounded-lg hover:scale-105 transition-transform" onclick="manageCourses()">
+                    <div class="text-center">
+                        <div class="text-4xl mb-4">📚</div>
+                        <h3 class="text-lg font-bold mb-2">Manage Courses</h3>
+                        <p class="text-gray-400 text-sm">Organize your courses and student enrollments</p>
+                    </div>
+                </button>
+                
+                <button class="cyber-card p-6 rounded-lg hover:scale-105 transition-transform" onclick="viewAnalytics()">
+                    <div class="text-center">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h3 class="text-lg font-bold mb-2">View Analytics</h3>
+                        <p class="text-gray-400 text-sm">Monitor student performance and engagement</p>
+                    </div>
+                </button>
+            </div>
+        </section>
+        
+        <!-- My Courses -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-6 neon-text">My Courses</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Course 1 -->
+                <div class="cyber-card p-6 rounded-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-blue-600 rounded-full text-xs">Active</span>
+                        <span class="text-blue-400 text-sm">32 Students</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Advanced Computer Graphics</h3>
+                    <p class="text-gray-400 text-sm mb-4">3D modeling and rendering techniques in immersive environments</p>
+                    <div class="space-y-2 text-sm mb-4">
+                        <div class="flex justify-between">
+                            <span>Quizzes:</span>
+                            <span class="text-green-400">5 Active</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Avg Score:</span>
+                            <span class="text-blue-400">87%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Environment:</span>
+                            <span class="text-purple-400">Cyberpunk</span>
+                        </div>
+                    </div>
+                    <button class="cyber-btn w-full py-2 rounded-lg" onclick="manageCourse(1)">
+                        Manage Course
+                    </button>
+                </div>
+                
+                <!-- Course 2 -->
+                <div class="cyber-card p-6 rounded-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-green-600 rounded-full text-xs">Active</span>
+                        <span class="text-green-400 text-sm">28 Students</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Spatial Computing Fundamentals</h3>
+                    <p class="text-gray-400 text-sm mb-4">Introduction to VR/AR development and spatial interfaces</p>
+                    <div class="space-y-2 text-sm mb-4">
+                        <div class="flex justify-between">
+                            <span>Quizzes:</span>
+                            <span class="text-green-400">3 Active</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Avg Score:</span>
+                            <span class="text-blue-400">92%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Environment:</span>
+                            <span class="text-purple-400">Space Station</span>
+                        </div>
+                    </div>
+                    <button class="cyber-btn w-full py-2 rounded-lg" onclick="manageCourse(2)">
+                        Manage Course
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Recent Activity & Analytics -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Recent Activity -->
+            <div>
+                <h2 class="text-2xl font-bold mb-6 neon-text">Recent Activity</h2>
+                <div class="cyber-card rounded-lg overflow-hidden">
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4 p-4 bg-gray-800 bg-opacity-50 rounded-lg">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <span class="text-xs">👤</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">Alex Rodriguez completed "3D Modeling Quiz"</p>
+                                    <p class="text-sm text-gray-400">Score: 85% • 2 hours ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4 p-4 bg-gray-800 bg-opacity-50 rounded-lg">
+                                <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <span class="text-xs">🥽</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">Michael Chen started VR quiz session</p>
+                                    <p class="text-sm text-gray-400">Spatial Interface Design • 5 hours ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4 p-4 bg-gray-800 bg-opacity-50 rounded-lg">
+                                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                                    <span class="text-xs">⚠️</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">Security alert: Eye tracking anomaly</p>
+                                    <p class="text-sm text-gray-400">Student ID: 1047 • 8 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Chart -->
+            <div>
+                <h2 class="text-2xl font-bold mb-6 neon-text">Student Performance</h2>
+                <div class="cyber-card p-6 rounded-lg">
+                    <canvas id="performanceChart" class="w-full h-64"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Create Quiz Modal -->
+    <div id="quiz-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md hidden items-center justify-center z-50">
+        <div class="cyber-card max-w-lg w-full mx-4 p-8 rounded-lg">
+            <h2 class="text-2xl font-bold neon-text mb-6">Create New Quiz</h2>
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold mb-2">Quiz Title</label>
+                    <input type="text" placeholder="Enter quiz title" 
+                           class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2">Course</label>
+                    <select class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                        <option>Advanced Computer Graphics</option>
+                        <option>Spatial Computing Fundamentals</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Duration (minutes)</label>
+                        <input type="number" value="45" 
+                               class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Questions</label>
+                        <input type="number" value="15" 
+                               class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2">3D Environment</label>
+                    <select class="w-full px-4 py-3 bg-gray-900 border border-gray-600 rounded-lg focus:border-blue-400 focus:outline-none">
+                        <option>Cyberpunk Classroom</option>
+                        <option>Space Station Lab</option>
+                        <option>Virtual Auditorium</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2">
+                        <span class="text-sm">Require VR Mode</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" checked class="mr-2">
+                        <span class="text-sm">Enable Eye Tracking</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" checked class="mr-2">
+                        <span class="text-sm">Enable Gesture Detection</span>
+                    </label>
+                </div>
+                
+                <div class="flex space-x-4 pt-4">
+                    <button type="button" id="cancel-quiz" class="flex-1 border border-gray-600 py-3 rounded-lg hover:border-red-400 transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 cyber-btn py-3 rounded-lg">
+                        Create Quiz
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user.id || user.role !== 'teacher') {
+                window.location.href = 'landing.html';
+                return;
+            }
+            
+            // Update user info
+            document.getElementById('user-name').textContent = user.name;
+            
+            // Initialize chart
+            initializeChart();
+            
+            // Animate cards on load
+            gsap.fromTo('.cyber-card', 
+                { opacity: 0, y: 20 }, 
+                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1 }
+            );
+        });
+        
+        // Initialize performance chart
+        function initializeChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                    datasets: [{
+                        label: 'Average Score',
+                        data: [78, 82, 85, 88, 87, 92],
+                        borderColor: '#00ff88',
+                        backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                        borderWidth: 2,
+                        fill: true
+                    }, {
+                        label: 'VR Sessions',
+                        data: [12, 18, 25, 32, 28, 35],
+                        borderColor: '#0088ff',
+                        backgroundColor: 'rgba(0, 136, 255, 0.1)',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#fff' }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#fff' } },
+                        y: { ticks: { color: '#fff' } }
+                    }
+                }
+            });
+        }
+        
+        // Logout functionality
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'landing.html';
+            }
+        });
+        
+        // Quick action functions
+        function createQuiz() {
+            document.getElementById('quiz-modal').classList.remove('hidden');
+            document.getElementById('quiz-modal').classList.add('flex');
+        }
+        
+        function manageCourses() {
+            alert('Course management interface would open here!');
+        }
+        
+        function viewAnalytics() {
+            alert('Detailed analytics dashboard would open here!');
+        }
+        
+        function manageCourse(courseId) {
+            alert(`Course ${courseId} management interface would open here!`);
+        }
+        
+        // Modal controls
+        document.getElementById('cancel-quiz').addEventListener('click', function() {
+            document.getElementById('quiz-modal').classList.add('hidden');
+            document.getElementById('quiz-modal').classList.remove('flex');
+        });
+        
+        // Close modal when clicking outside
+        document.getElementById('quiz-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+                this.classList.remove('flex');
+            }
+        });
+        
+        // Handle quiz creation form
+        document.querySelector('#quiz-modal form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Quiz created successfully! (In a real app, this would save to the database)');
+            document.getElementById('quiz-modal').classList.add('hidden');
+            document.getElementById('quiz-modal').classList.remove('flex');
+        });
+    </script>
+</body>
+</html>
